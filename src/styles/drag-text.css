@@ -235,3 +235,30 @@
 .h5p-drag-text .h5p-question-introduction {
   outline: none;
 }
+
+/* Column Layout css : */
+.h5p-drag-text .h5p-drag-draggables-container.h5p-drag-column, 
+.h5p-drag-text .h5p-drag-droppable-words.h5p-drag-column .h5p-drag-show-solution-container.incorrect {
+  width: 45%;
+  float: right;
+  padding-top: 0;
+}
+
+.h5p-drag-text .h5p-drag-droppable-words.h5p-drag-column {
+  line-height: 0.5em;
+}
+
+.h5p-drag-text .h5p-drag-droppable-words.h5p-drag-column .h5p-drag-dropzone-container {
+  display: block;
+}
+
+.h5p-drag-text .h5p-drag-droppable-words.h5p-drag-column .ui-droppable {
+  width:  45%!important
+}
+.h5p-drag-text [aria-grabbed].h5p-drag-dropped.h5p-drag-draggable-column {
+  white-space: break-spaces;
+}
+
+.h5p-drag-text .h5p-drag-droppable-words.h5p-drag-column .h5p-drag-show-solution-container {
+  line-height: 1.5em;
+}

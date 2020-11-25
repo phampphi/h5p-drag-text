@@ -20,7 +20,12 @@
       "hr",
       "pre",
       "code"
-    ]
+    ],
+    "font": {
+      "size": true,
+      "color": true,
+      "background": true
+    }
   },
   {
     "label": "Text",
@@ -44,6 +49,15 @@
     "placeholder": "Paris,Rome",
     "description": "Extra droppable (incorrect) words to add more complexity to the task. The words are separated by comma.",
     "optional": true
+  },
+  {
+    "name": "columnLayout",
+    "label": "Column Layout",
+    "importance": "low",
+    "type": "boolean",
+    "description": "With column layout, the draggables are aligned on the right.",
+    "optional": true,
+    "default": false
   },
   {
     "name": "overallFeedback",
