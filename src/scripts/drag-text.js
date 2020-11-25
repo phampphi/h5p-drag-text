@@ -1,14 +1,14 @@
-import { parseText, lex } from './parse-text';
-import StopWatch from './stop-watch';
-import Util from './util';
-import Draggable from './draggable';
-import Droppable from './droppable';
-
-import Controls from 'h5p-lib-controls/src/scripts/controls';
 import AriaDrag from 'h5p-lib-controls/src/scripts/aria/drag';
 import AriaDrop from 'h5p-lib-controls/src/scripts/aria/drop';
+import Controls from 'h5p-lib-controls/src/scripts/controls';
 import UIKeyboard from 'h5p-lib-controls/src/scripts/ui/keyboard';
 import Mouse from 'h5p-lib-controls/src/scripts/ui/mouse';
+import Draggable from './draggable';
+import Droppable from './droppable';
+import { lex, parseText } from './parse-text';
+import StopWatch from './stop-watch';
+import Util from './util';
+
 
 /**
  * @typedef {object} H5P.DragTextEvent
@@ -766,7 +766,12 @@ H5P.DragText = (function ($, Question, ConfirmationDialog) {
           self.$wordContainer.append(el);
         }
       });
-
+    
+    if (self.params.extraWords){
+      self.params.extraWords.trim().split(',').filter(a => a.trim().length > 0)
+        .forEach((word) => self.createDraggable(word));
+    }
+    
     self.shuffleAndAddDraggables(self.$draggables);
     self.$draggables.appendTo(self.$taskContainer);
     self.$wordContainer.appendTo(self.$taskContainer);

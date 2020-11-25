@@ -36,6 +36,16 @@
     }
   },
   {
+    "name": "extraWords",
+    "label": "Extra Words",
+    "importance": "low",
+    "type": "text",
+    "widget": "textarea",
+    "placeholder": "Paris,Rome",
+    "description": "Extra droppable (incorrect) words to add more complexity to the task. The words are separated by comma.",
+    "optional": true
+  },
+  {
     "name": "overallFeedback",
     "type": "group",
     "label": "Overall Feedback",
