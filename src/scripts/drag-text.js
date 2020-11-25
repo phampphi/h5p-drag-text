@@ -1,14 +1,14 @@
-import { parseText, lex } from './parse-text';
-import StopWatch from './stop-watch';
-import Util from './util';
-import Draggable from './draggable';
-import Droppable from './droppable';
-
-import Controls from 'h5p-lib-controls/src/scripts/controls';
 import AriaDrag from 'h5p-lib-controls/src/scripts/aria/drag';
 import AriaDrop from 'h5p-lib-controls/src/scripts/aria/drop';
+import Controls from 'h5p-lib-controls/src/scripts/controls';
 import UIKeyboard from 'h5p-lib-controls/src/scripts/ui/keyboard';
 import Mouse from 'h5p-lib-controls/src/scripts/ui/mouse';
+import Draggable from './draggable';
+import Droppable from './droppable';
+import { lex, parseText } from './parse-text';
+import StopWatch from './stop-watch';
+import Util from './util';
+
 
 /**
  * @typedef {object} H5P.DragTextEvent
@@ -55,6 +55,8 @@ H5P.DragText = (function ($, Question, ConfirmationDialog) {
   //Special Sub-containers:
   var DRAGGABLES_WIDE_SCREEN = 'h5p-drag-wide-screen';
   var DRAGGABLE_ELEMENT_WIDE_SCREEN = 'h5p-drag-draggable-wide-screen';
+  var DRAGGABLES_COLUMN = 'h5p-drag-column';
+  var DRAGGABLE_ELEMENT_COLUMN = 'h5p-drag-draggable-column';
 
   /**
    * Initialize module.
@@ -368,7 +370,14 @@ H5P.DragText = (function ($, Question, ConfirmationDialog) {
     self.addDropzoneWidth();
 
     //Find ratio of width to em, and make sure it is less than the predefined ratio, make sure widest draggable is less than a third of parent width.
-    if ((self.$inner.width() / parseFloat(self.$inner.css("font-size"), 10) > 43) && (self.widestDraggable <= (self.$inner.width() / 3))) {
+    if (self.params.columnLayout){
+      self.$draggables.addClass(DRAGGABLES_COLUMN);
+      self.draggables.forEach(function (draggable) {
+        draggable.getDraggableElement().addClass(DRAGGABLE_ELEMENT_COLUMN);
+      });
+      self.$wordContainer.addClass(DRAGGABLES_COLUMN);
+    }
+    else if ((self.$inner.width() / parseFloat(self.$inner.css("font-size"), 10) > 43) && (self.widestDraggable <= (self.$inner.width() / 3))) {
       // Adds a class that floats the draggables to the right.
       self.$draggables.addClass(DRAGGABLES_WIDE_SCREEN);
 
@@ -766,7 +775,12 @@ H5P.DragText = (function ($, Question, ConfirmationDialog) {
           self.$wordContainer.append(el);
         }
       });
-
+    
+    if (self.params.extraWords){
+      self.params.extraWords.trim().split(',').filter(a => a.trim().length > 0)
+        .forEach((word) => self.createDraggable(word));
+    }
+    
     self.shuffleAndAddDraggables(self.$draggables);
     self.$draggables.appendTo(self.$taskContainer);
     self.$wordContainer.appendTo(self.$taskContainer);
@@ -791,6 +805,7 @@ H5P.DragText = (function ($, Question, ConfirmationDialog) {
   DragText.prototype.addDropzoneWidth = function () {
     var self = this;
     var widest = 0;
+    var highest = 0;
     var widestDragagble = 0;
     var fontSize = parseInt(this.$inner.css('font-size'), 10);
     var staticMinimumWidth = 3 * fontSize;
@@ -809,12 +824,18 @@ H5P.DragText = (function ($, Question, ConfirmationDialog) {
         'margin': 0
       }).html(draggable.getAnswerText())
         .appendTo($draggableElement.parent());
+      if (self.params.columnLayout){
+        $tmp.css({
+          'white-space': 'break-spaces',
+        });
+      }
+
       var width = $tmp.outerWidth();
 
       widestDragagble = width > widestDragagble ? width : widestDragagble;
 
       // Measure how big truncated draggable should be
-      if ($tmp.text().length >= 20) {
+      if (!self.params.columnLayout && $tmp.text().length >= 20) {
         $tmp.html(draggable.getShortFormat());
         width = $tmp.width();
       }
@@ -822,6 +843,8 @@ H5P.DragText = (function ($, Question, ConfirmationDialog) {
       if (width + staticPadding > widest) {
         widest = width + staticPadding;
       }
+      if ($tmp.outerHeight(true) + staticPadding > highest)
+        highest = $tmp.outerHeight(true) + staticPadding;
       $tmp.remove();
     });
     // Set min size
@@ -833,6 +856,8 @@ H5P.DragText = (function ($, Question, ConfirmationDialog) {
     //Adjust all droppable to widest size.
     this.droppables.forEach(function (droppable) {
       droppable.getDropzone().width(self.widest);
+      if (self.params.columnLayout)
+        droppable.getDropzone().height(highest);
     });
   };
 

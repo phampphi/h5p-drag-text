@@ -83,7 +83,7 @@ H5P.TextDroppable = (function ($) {
     if (!correct) {
       this.$showSolution.html(this.text);
     }
-
+    this.$showSolution.height(this.$dropzoneContainer.height()); 
     this.$showSolution.prepend(correct ? this.$correctText : this.$incorrectText);
     this.$showSolution.toggleClass('incorrect', !correct);
     this.$showSolution.show();

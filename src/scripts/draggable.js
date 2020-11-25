@@ -180,7 +180,7 @@ H5P.TextDraggable = (function ($) {
     }
     this.toggleDroppedFeedback(true);
     this.insideDropzone = droppable;
-    this.setShortFormat();
+    //this.setShortFormat();
     this.trigger('addedToZone');
   };
 
