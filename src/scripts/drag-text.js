@@ -136,6 +136,8 @@ H5P.DragText = (function ($, Question, ConfirmationDialog) {
     this.dropControls = new Controls([new UIKeyboard(), new Mouse(), this.ariaDropControls]);
     this.dropControls.useNegativeTabIndex();
 
+    this.heightAdjusted = false;
+
     // return false to prevent select from happening when draggable is disabled
     this.dragControls.on('before-select', event => !this.isElementDisabled(event.element));
 
@@ -579,7 +581,7 @@ H5P.DragText = (function ($, Question, ConfirmationDialog) {
    */
   DragText.prototype.toggleDraggablesContainer = function () {
     var isEmpty = this.$draggables.children().length === 0;
-    this.$draggables.toggleClass('hide', isEmpty);
+    // this.$draggables.toggleClass('hide', isEmpty);
   };
 
   /**
@@ -819,7 +821,7 @@ H5P.DragText = (function ($, Question, ConfirmationDialog) {
       var $tmp = $draggableElement.clone().css({
         'position': 'absolute',
         'white-space': 'nowrap',
-        'width': 'auto',
+        'width': '48%',
         'padding': 0,
         'margin': 0
       }).html(draggable.getAnswerText())
@@ -855,10 +857,12 @@ H5P.DragText = (function ($, Question, ConfirmationDialog) {
     this.widest = widest;
     //Adjust all droppable to widest size.
     this.droppables.forEach(function (droppable) {
-      droppable.getDropzone().width(self.widest);
-      if (self.params.columnLayout)
+      if (!self.params.columnLayout)
+        droppable.getDropzone().width(self.widest);
+      if (self.params.columnLayout && !self.heightAdjusted)
         droppable.getDropzone().height(highest);
     });
+    self.heightAdjusted = highest > 0;
   };
 
   /**
