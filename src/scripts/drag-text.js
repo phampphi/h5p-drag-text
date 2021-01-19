@@ -821,7 +821,7 @@ H5P.DragText = (function ($, Question, ConfirmationDialog) {
       var $tmp = $draggableElement.clone().css({
         'position': 'absolute',
         'white-space': 'nowrap',
-        'width': '48%',
+        'width': 'auto',
         'padding': 0,
         'margin': 0
       }).html(draggable.getAnswerText())
